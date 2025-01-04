@@ -2,16 +2,26 @@
   "expo": {
     "name": "ExpenseTracker",
     "slug": "ExpenseTracker",
+    "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/react-logo@3x.png",
     "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "splash": {
+      "image": "./assets/images/react-logo@3x.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#25292e"
+    },
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -25,14 +35,28 @@
     "plugins": [
       "expo-router",
       [
-        "expo-splash-screen",
+        "expo-sqlite",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "enableFTS": true,
+          "useSQLCipher": true,
+          "android": {
+            "enableFTS": false,
+            "useSQLCipher": false
+          },
+          "ios": {
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
+          }
         }
-      ]
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
