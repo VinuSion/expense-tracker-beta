@@ -2,12 +2,14 @@
   "expo": {
     "name": "ExpenseTracker",
     "slug": "ExpenseTracker",
-    "scheme": "myapp",
+    "scheme": "com.expense-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
@@ -18,6 +20,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.expense.tracker",
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
@@ -60,6 +63,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "94737a79-d59e-4a9a-a125-e4f360b1b440"
+      }
     }
   }
 }
