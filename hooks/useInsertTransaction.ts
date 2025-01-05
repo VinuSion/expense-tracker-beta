@@ -42,7 +42,7 @@ export const useInsertTransaction = () => {
 				Alert.alert("Success", "New transaction inserted successfully");
 			} catch (error) {
 				console.error("Failed to insert transaction:", error);
-				Alert.alert("Error", "Failed to insert transaction");
+				Alert.alert("Error", "Failed to insert transaction. Please try again.");
 			}
 		},
 		[db],

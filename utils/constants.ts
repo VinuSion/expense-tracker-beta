@@ -35,7 +35,10 @@ export const schemaStatements = [
   )`,
   `INSERT INTO banks (bank_name, logo_url) VALUES 
     ('Bancolombia', 'https://res.cloudinary.com/stkv2/image/upload/v1735163181/banks/bwbo3c6g1qsjistcgmgq.png'),
+    ('BBVA', 'https://res.cloudinary.com/stkv2/image/upload/v1736112133/banks/vvvkpz2oxgzkrygile0r.png'),
+    ('Bogota', 'https://res.cloudinary.com/stkv2/image/upload/v1736112133/banks/nppltf8dgg4tvfjkqiyj.png'),
     ('Cash', 'https://res.cloudinary.com/stkv2/image/upload/v1735163181/banks/hpb1twaaan4sb5kxupz2.png'),
+    ('Davivienda', 'https://res.cloudinary.com/stkv2/image/upload/v1736112125/banks/byaysih3bfmhyveasyrg.png'),
     ('Global66', 'https://res.cloudinary.com/stkv2/image/upload/v1735163181/banks/eibkudsc6prz4du3jzxn.png'),
     ('Nequi', 'https://res.cloudinary.com/stkv2/image/upload/v1735163181/banks/wxbpieywd8xo9ynhgcbt.png'),
     ('NuBank', 'https://res.cloudinary.com/stkv2/image/upload/v1735163181/banks/zitxlmfeongnfm0kejss.png')`,
@@ -43,11 +46,17 @@ export const schemaStatements = [
     ('Food', 'Expense'),
     ('Clothes', 'Expense'),
     ('House Bills', 'Expense'),
+    ('Debt Repayments', 'Expense'),
     ('Self Hygiene', 'Expense'),
     ('Transport', 'Expense'),
     ('Subscriptions', 'Expense'),
     ('Tech', 'Expense'),
-    ('Salary', 'Income')`,
+    ('Utilities', 'Expense'),
+    ('Other', 'Expense'),
+    ('Salary', 'Income'),
+    ('Side Hustle', 'Income'),
+    ('Gifts', 'Income'),
+    ('Miscellaneous', 'Income')`,
   `PRAGMA foreign_keys = ON`
 ];
 
@@ -58,12 +67,18 @@ export const viewOptions = [
 ];
 
 export const categoryIconMap: Record<string, string> = {
-  'Food': 'restaurant',
-  'Clothes': 'shopping-bag',
-  'House Bills': 'home',
-  'Self Hygiene': 'spa',
-  'Transport': 'directions-car',
-  'Subscriptions': 'subscriptions',
-  'Tech': 'devices',
-  'Salary': 'attach-money',
+  'Food': 'restaurant', // Icon for restaurants or meals
+  'Clothes': 'shopping-bag', // Icon for shopping, clothes
+  'House Bills': 'home', // Icon for home bills, housing
+  'Debt Repayments': 'credit-card', // Icon for debt or credit card payments
+  'Self Hygiene': 'spa', // Icon for self-care, hygiene
+  'Transport': 'directions-car', // Icon for cars, transport
+  'Subscriptions': 'subscriptions', // Icon for subscriptions like Netflix, Spotify, etc.
+  'Tech': 'devices', // Icon for technology items
+  'Utilities': 'archive', // Icon for electricity or utilities
+  'Other': 'help-outline', // Icon for other miscellaneous expenses
+  'Salary': 'work', // Icon for salary or income
+  'Side Hustle': 'attach-money', // Icon for freelancing or side projects
+  'Gifts': 'card-giftcard', // Icon for gifts or presents
+  'Miscellaneous': 'category', // Icon for miscellaneous items or general use
 };

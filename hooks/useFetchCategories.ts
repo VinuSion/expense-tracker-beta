@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSQLiteContext } from 'expo-sqlite'
 import { useDBStore } from '@/store/dbStore'
-import { Category, TransactionType } from '@/utils/types'
+import { Category } from '@/utils/types'
 
-export function useFetchCategories(categoryType: TransactionType = 'Expense') {
+export function useFetchCategories() {
   const { dbExists } = useDBStore()
   const db = useSQLiteContext()
   const [categories, setCategories] = useState<Category[]>([])
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-  async function fetchCategories() {
+  const fetchCategories = useCallback(async () => {
     try {
-      const result = await db.getAllAsync<Category>(
-        `SELECT * FROM categories WHERE category_type = ?;`,
-        [categoryType]
-      )
+      const result = await db.getAllAsync<Category>(`SELECT * FROM categories;`)
       console.log('Categories Data:', result)
       setCategories(result)
     } catch (error) {
       console.error('Error fetching categories:', error)
     }
-  }
+  }, [db])
+
+  const refreshCategories = () => setRefreshTrigger((prev) => prev + 1)
 
   useEffect(() => {
     if (db && dbExists) {
@@ -28,7 +28,7 @@ export function useFetchCategories(categoryType: TransactionType = 'Expense') {
         await fetchCategories()
       })
     }
-  }, [db, dbExists, categoryType])
+  }, [db, dbExists, refreshTrigger])
 
-  return categories
+  return { categories, refreshCategories, fetchCategories }
 }

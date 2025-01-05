@@ -5,6 +5,7 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	TextInput,
+	Alert,
 } from "react-native";
 import CurrencyInput from "react-native-currency-input";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -42,7 +43,7 @@ export default function NewTransactionForm({
 
 	const handleSubmit = async () => {
 		if (!amount || !selectedCategory || !selectedBank) {
-			alert("Please fill in all required fields.");
+			Alert.alert("Input Error", "Please fill in all required fields.");
 			return;
 		}
 
@@ -88,7 +89,7 @@ export default function NewTransactionForm({
 			<TextInput
 				style={styles.input}
 				placeholder="Description (optional)"
-				placeholderTextColor="#fff"
+				placeholderTextColor="#ccc"
 				value={transactionDescription}
 				onChangeText={setTransactionDescription}
 			/>
@@ -101,7 +102,7 @@ export default function NewTransactionForm({
 				separator=","
 				precision={0}
 				placeholder="Amount"
-				placeholderTextColor="#fff"
+				placeholderTextColor="#ccc"
 			/>
 			<TouchableOpacity
 				onPress={() => setShowDatePicker(true)}
@@ -124,13 +125,13 @@ export default function NewTransactionForm({
 				currentCategorySelected={selectedCategory}
 				setCurrentCategorySelected={setSelectedCategory}
 				transactionType={transactionType}
-        style={{ marginVertical: 10 }}
+				style={{ marginVertical: 10 }}
 			/>
 			<BanksDropdown
 				banks={banks}
 				selectedBank={selectedBank}
 				setSelectedBank={setSelectedBank}
-        style={{ marginVertical: 10 }}
+				style={{ marginVertical: 10 }}
 			/>
 			<Button
 				theme="primary"
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		borderWidth: 1,
-		borderColor: "#343b44",
+		borderColor: "#45576d",
 		borderRadius: 5,
 		padding: 10,
 		marginBottom: 10,

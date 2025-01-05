@@ -1,21 +1,33 @@
 import { useState } from "react";
-import { Text, View, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import {
+	Text,
+	TextInput,
+	View,
+	StyleSheet,
+	Alert,
+	TouchableOpacity,
+	FlatList,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useDBStore } from "@/store/dbStore";
+import { useFetchCategories } from "@/hooks/useFetchCategories";
+import { useInsertCategory } from "@/hooks/useInsertCategory";
 import { generateTimestampedFilename } from "@/utils/helpers";
 import { DEFAULT_DB_PATH } from "@/utils/constants";
 
-import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
 
 export default function AboutScreen() {
 	const router = useRouter();
 	const { dbPath, deleteDB } = useDBStore();
+	const { categories, refreshCategories } = useFetchCategories();
+	const { insertCategory } = useInsertCategory();
 
 	const [dialogVisible, setDialogVisible] = useState(false);
+	const [newCategory, setNewCategory] = useState<string>("");
 
 	const handleExportDB = async () => {
 		try {
@@ -75,10 +87,40 @@ export default function AboutScreen() {
 	};
 
 	const confirmDelete = () => {
-    setDialogVisible(false);
+		setDialogVisible(false);
 		deleteDB();
 		console.log("Database Deleted");
 		router.replace("../welcome");
+	};
+
+	const handleAddCategory = async () => {
+		if (!newCategory) {
+			Alert.alert("Input Error", "Please fill in all required fields.");
+			return;
+		}
+
+		if (newCategory.length > 25) {
+			Alert.alert(
+				"Input Error",
+				"Category name must not exceed 25 characters.",
+			);
+			return;
+		}
+
+		const isValid = /^[a-zA-Z\s]+$/.test(newCategory);
+		if (!isValid) {
+			Alert.alert(
+				"Input Error",
+				"Category name must only contain letters and spaces.",
+			);
+			return;
+		}
+
+		console.log("New Category Form Input:", newCategory);
+		await insertCategory(newCategory.trim());
+		refreshCategories();
+
+		setNewCategory("");
 	};
 
 	return (
@@ -110,7 +152,7 @@ export default function AboutScreen() {
 
 					<TouchableOpacity
 						activeOpacity={1}
-						style={styles.optionContainer}
+						style={[styles.optionContainer, { borderBottomWidth: 0 }]}
 						onPress={() => setDialogVisible(true)}
 					>
 						<View style={styles.optionContent}>
@@ -132,6 +174,50 @@ export default function AboutScreen() {
 						</View>
 					</TouchableOpacity>
 				</View>
+			</View>
+			<Text style={[styles.title, { marginVertical: 10 }]}>Add Categories</Text>
+			<View style={styles.wrapperContainer}>
+				<Text style={styles.text}>
+					You can only create "Expense" categories right now because they're
+					more common than "Income" categories. However, you can't delete or
+					edit categories, so choose their names carefully!
+				</Text>
+				<View style={styles.categoryForm}>
+					<TextInput
+						style={styles.input}
+						placeholder="Add New Category..."
+						placeholderTextColor="#ccc"
+						value={newCategory}
+						onChangeText={setNewCategory}
+					/>
+					<TouchableOpacity
+						activeOpacity={1}
+						style={styles.addBtn}
+						onPress={handleAddCategory}
+					>
+						<MaterialIcons name="add" size={28} color="black" />
+					</TouchableOpacity>
+				</View>
+				<FlatList
+					data={categories}
+					keyExtractor={(item) => item.id.toString()}
+					numColumns={3}
+					columnWrapperStyle={styles.columnWrapper}
+					contentContainerStyle={styles.listContainer}
+					style={{
+						backgroundColor: "#1b2026",
+						borderRadius: 10,
+						borderWidth: 1,
+						borderColor: "#45576d",
+						maxHeight: 220,
+						flexGrow: 0,
+					}}
+					renderItem={({ item }) => (
+						<View style={styles.categoryItem}>
+							<Text style={styles.categoryName}>{item.category_name}</Text>
+						</View>
+					)}
+				/>
 			</View>
 			<ConfirmModal
 				visible={dialogVisible}
@@ -160,6 +246,10 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		paddingLeft: 15,
 		alignItems: "flex-start",
+	},
+	text: {
+		fontSize: 14,
+		color: "#ccc",
 	},
 	wrapperContainer: {
 		width: "100%",
@@ -195,13 +285,47 @@ const styles = StyleSheet.create({
 	optionIcon: {
 		flexShrink: 0,
 	},
-	text: {
-		fontSize: 14,
-		color: "#ccc",
-	},
-	footerContainer: {
-		gap: 15,
+	categoryForm: {
 		width: "100%",
-		paddingHorizontal: 20,
+		flexDirection: "row",
+		gap: 10,
+		marginVertical: 10,
+	},
+	input: {
+		borderWidth: 1,
+		borderColor: "#45576d",
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 10,
+		color: "#fff",
+		width: "82%",
+		height: 50,
+	},
+	addBtn: {
+		backgroundColor: "#fff",
+		padding: 5,
+		borderRadius: 15,
+		width: 50,
+		height: 50,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	listContainer: {
+		gap: 8,
+		padding: 5,
+	},
+	columnWrapper: {
+		justifyContent: "flex-start",
+    flexWrap: "wrap",
+		gap: 8,
+	},
+	categoryItem: {
+		paddingVertical: 5,
+		paddingHorizontal: 13,
+		borderRadius: 25,
+		backgroundColor: "#313f47",
+	},
+	categoryName: {
+		color: "#fff",
 	},
 });
